@@ -8,7 +8,7 @@ import Common.Client;
 import Common.Settings;
 import Common.Voter;
 
-public class SecureElectionClient {
+public class ElectionClient {
     // constants
     private static final String CLIENTTRUSTSTORE = Settings.KEYLOCATION + "ClientTruststore.ks";
     private static final String CLIENTKEYSTORE   = Settings.KEYLOCATION + "ClientKeystore.ks";
@@ -89,7 +89,7 @@ public class SecureElectionClient {
 
     public static void main(String[] args) {
         try {
-            SecureElectionClient c = new SecureElectionClient();
+            ElectionClient c = new ElectionClient();
             c.run();
         } catch (Exception e) {
             System.out.println(e);
