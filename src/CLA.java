@@ -24,14 +24,26 @@ public class CLA implements Runnable {
     BufferedReader serverInput, clientInput;
     PrintWriter serverOutput, clientOutput;
 
+    /**
+     * Constructor for CLA
+     * @param incoming
+     */
     public CLA(SSLSocket incoming) {
         this.incoming = incoming;
     }
 
+    /**
+     * Setter for authorized voters
+     * @param authorizedVoters
+     */
     public void setAuthorizedVoters(Vector<Voter> authorizedVoters) {
         this.authorizedVoters = authorizedVoters;
     }
 
+    /**
+     * Function to authorize voters
+     * @throws Exception
+     */
     private void authorizeVoters() throws Exception {
         String str;
         while (!(str = serverInput.readLine()).equals(Settings.Commands.END)) {
@@ -43,6 +55,12 @@ public class CLA implements Runnable {
         clientOutput.println(Settings.Commands.TERMINATE);
     }
 
+    /**
+     * Register a voter
+     * @param v
+     * @return
+     * @throws Exception
+     */
     private String registerVoter(Voter v) throws Exception {
         if (!authorizedVoters.contains(v) && v.getId() > Settings.MIN_AGE) {
             v.setValidationNumber(BigInteger.probablePrime(
@@ -56,12 +74,23 @@ public class CLA implements Runnable {
         return v.fromCTF();
     }
 
+    /**
+     * Sends the string to CTF
+     * @param s
+     * @throws Exception
+     */
     private void sendToCTF(String s) throws Exception {
         clientOutput.println(Settings.Commands.REGISTER_VALID);
         clientOutput.println(s);
         clientOutput.println(Settings.Commands.END);
     }
 
+    /**
+     * Starts the CTF client
+     * @param host
+     * @param port
+     * @throws Exception
+     */
     private void startClient(InetAddress host, int port) throws Exception {
         Client client = new Client(CLAKEYSTORE, CLATRUSTSTORE, CLAPASSWORD, host, port);
         SSLSocket c = client.getSocket();
@@ -69,6 +98,9 @@ public class CLA implements Runnable {
         clientOutput = new PrintWriter(c.getOutputStream(), true);
     }
 
+    /**
+     * Function used to run the CTF
+     */
     public void run() {
         try {
             // prepare incoming connections
@@ -96,6 +128,10 @@ public class CLA implements Runnable {
         }
     }
 
+    /**
+     * Main function for the CLA
+     * @param args
+     */
     public static void main(String[] args) {
         try {
             Server s = new Server(CLAKEYSTORE, CLATRUSTSTORE, CLAPASSWORD, Settings.CLA_PORT);

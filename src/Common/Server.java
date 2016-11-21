@@ -20,29 +20,29 @@ public class Server {
     public void init() {
         try {
             // load keystores
-            System.out.print("loading keystores... ");
+            System.out.print("Loading keystores...");
             KeyStore ks = KeyStore.getInstance("JCEKS");
             ks.load(new FileInputStream(keystore),
                     passphrase.toCharArray());
             KeyStore ts = KeyStore.getInstance("JCEKS");
             ts.load(new FileInputStream(truststore),
                     passphrase.toCharArray());
-            System.out.print("done.\n");
+            System.out.print("Keystores done.\n");
 
             // setup key/trust managers
-            System.out.print("Preparing trust managers... ");
+            System.out.print("Preparing trust managers...");
             KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
             kmf.init(ks, passphrase.toCharArray());
             TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
             tmf.init(ts);
-            System.out.print("done.\n");
+            System.out.print("Trust managers loaded.\n");
 
             // setup ssl server
-            System.out.print("Starting server... ");
+            System.out.print("Starting server...");
             SSLContext serverContext = SSLContext.getInstance("TLS");
             serverContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
             SSLServerSocketFactory sslServer = serverContext.getServerSocketFactory();
-            System.out.print("done.\n");
+            System.out.print("Server started.\n");
 
             sss = (SSLServerSocket) sslServer.createServerSocket(port);
             sss.setEnabledCipherSuites(sss.getSupportedCipherSuites());

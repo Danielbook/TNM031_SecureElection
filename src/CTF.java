@@ -10,37 +10,57 @@ import java.math.BigInteger;
 import java.util.*;
 
 public class CTF implements Runnable {
-    // constants
+    // Constants
     private static final String CTFTRUSTSTORE = Settings.KEYLOCATION + "CTFTruststore.ks";
     private static final String CTFKEYSTORE   = Settings.KEYLOCATION + "CTFKeystore.ks";
     private static final String CTFPASSWORD   = "password";
 
-    // string versions of CLA's validation numbers
+    // String versions of CLA's validation numbers
     private Vector<String> authorizedVoters = new Vector<>();
     private Vector<Voter> voters = new Vector<>();
     private Map<Integer, Integer> votes = new HashMap<Integer, Integer>();
 
-    // server/client socket and IO vars
+    // Server/client socket and IO vars
     SSLSocket incoming;
     BufferedReader serverInput;
     PrintWriter serverOutput;
 
+    /**
+     * Constructor
+     * @param incoming
+     */
     public CTF(SSLSocket incoming) {
         this.incoming = incoming;
     }
 
+    /**
+     *
+     * @param authorizedVoters
+     */
     public void setAuthorizedVoters(Vector<String> authorizedVoters) {
         this.authorizedVoters = authorizedVoters;
     }
 
+    /**
+     * Setter for voters
+     * @param voters
+     */
     public void setVoters(Vector<Voter> voters) {
         this.voters = voters;
     }
 
+    /**
+     * Setter for votes
+     * @param votes
+     */
     public void setVotes(Map<Integer, Integer> votes) {
         this.votes = votes;
     }
 
+    /**
+     * Registers the validation number from client
+     * @throws Exception
+     */
     private void registerValidationNumber() throws Exception {
         String str = serverInput.readLine();
         System.out.println("s: " + str);
@@ -49,6 +69,10 @@ public class CTF implements Runnable {
         }
     }
 
+    /**
+     * Register the actual vote
+     * @throws Exception
+     */
     private void registerVote() throws Exception {
         String str = serverInput.readLine();
         System.out.println("s: " + str);
@@ -67,6 +91,10 @@ public class CTF implements Runnable {
         }
     }
 
+    /**
+     * Send result to server
+     * @throws Exception
+     */
     private void sendResult() throws Exception {
         int total = voters.size();
         serverOutput.println("Total votes: " + total);
@@ -114,6 +142,10 @@ public class CTF implements Runnable {
         }
     }
 
+    /**
+     * Main function for the CTF, starts the server
+     * @param args
+     */
     public static void main(String[] args) {
         try {
             Server s = new Server(CTFKEYSTORE, CTFTRUSTSTORE, CTFPASSWORD, Settings.CTF_PORT);
