@@ -20,9 +20,9 @@ public class CLA implements Runnable {
 
     private Vector<Voter> authorizedVoters;
 
-    SSLSocket incoming;
-    BufferedReader serverInput, clientInput;
-    PrintWriter serverOutput, clientOutput;
+    private SSLSocket incoming;
+    private BufferedReader serverInput, clientInput;
+    private PrintWriter serverOutput, clientOutput;
 
     /**
      * Constructor for CLA
@@ -48,7 +48,7 @@ public class CLA implements Runnable {
         String str;
         while (!(str = serverInput.readLine()).equals(Settings.Commands.END)) {
             System.out.println("s: " + str);
-            // remove 'id=' from string and parse as int
+            // Clean the string from 'id=' and parse to int
             int id = Integer.parseInt(str.substring(3));
             registerVoter(new Voter(-1, id));
         }
@@ -66,7 +66,7 @@ public class CLA implements Runnable {
             v.setValidationNumber(BigInteger.probablePrime(
                     Settings.VALIDATION_BITLENGTH, new SecureRandom()));
             authorizedVoters.add(v);
-            // respond to client and send to CTF
+            // Respond to client and send to CTF
             serverOutput.println(v.fromCTF() + '\n' + Settings.Commands.END);
             sendToCTF(v.fromCTF());
         }
@@ -103,9 +103,8 @@ public class CLA implements Runnable {
      */
     public void run() {
         try {
-            // prepare incoming connections
-            serverInput = new BufferedReader(
-                    new InputStreamReader(incoming.getInputStream()));
+            // Prepare incoming connections
+            serverInput = new BufferedReader(new InputStreamReader(incoming.getInputStream()));
             serverOutput = new PrintWriter(incoming.getOutputStream(), true);
             startClient(InetAddress.getLocalHost(), Settings.CTF_PORT);
             String str = serverInput.readLine();
@@ -135,7 +134,7 @@ public class CLA implements Runnable {
     public static void main(String[] args) {
         try {
             Server s = new Server(CLAKEYSTORE, CLATRUSTSTORE, CLAPASSWORD, Settings.CLA_PORT);
-            // shared resource for all threads
+            // Shared resource for all threads
             Vector<Voter> voters = new Vector<>();
 
             while (true) {

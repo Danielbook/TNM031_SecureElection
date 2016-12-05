@@ -19,7 +19,7 @@ public class Server {
 
     public void init() {
         try {
-            // load keystores
+            // Load keystores
             System.out.print("Loading keystores...");
             KeyStore ks = KeyStore.getInstance("JCEKS");
             ks.load(new FileInputStream(keystore),
@@ -29,7 +29,7 @@ public class Server {
                     passphrase.toCharArray());
             System.out.print("Keystores done.\n");
 
-            // setup key/trust managers
+            // Setup key/trust managers
             System.out.print("Preparing trust managers...");
             KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
             kmf.init(ks, passphrase.toCharArray());
@@ -37,7 +37,7 @@ public class Server {
             tmf.init(ts);
             System.out.print("Trust managers loaded.\n");
 
-            // setup ssl server
+            // Setup ssl server
             System.out.print("Starting server...");
             SSLContext serverContext = SSLContext.getInstance("TLS");
             serverContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
@@ -47,7 +47,7 @@ public class Server {
             sss = (SSLServerSocket) sslServer.createServerSocket(port);
             sss.setEnabledCipherSuites(sss.getSupportedCipherSuites());
 
-            // require socket auth
+            // Require socket auth
             sss.setNeedClientAuth(true);
             System.out.println("Server running on port " + port);
         } catch (Exception e) {

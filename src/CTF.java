@@ -21,9 +21,9 @@ public class CTF implements Runnable {
     private Map<Integer, Integer> votes = new HashMap<Integer, Integer>();
 
     // Server/client socket and IO vars
-    SSLSocket incoming;
-    BufferedReader serverInput;
-    PrintWriter serverOutput;
+    private SSLSocket incoming;
+    private BufferedReader serverInput;
+    private PrintWriter serverOutput;
 
     /**
      * Constructor
@@ -85,7 +85,7 @@ public class CTF implements Runnable {
             if (!voters.contains(v)) {
                 System.out.println(v);
                 voters.add(v);
-                // save vote
+                // Save the vote
                 votes.put(choice, votes.getOrDefault(choice, 0) + 1);
             }
         }
@@ -113,7 +113,7 @@ public class CTF implements Runnable {
 
     public void run() {
         try {
-            // prepare incoming connections
+            // Prepare incoming connections
             serverInput = new BufferedReader(
                     new InputStreamReader(incoming.getInputStream()));
             serverOutput = new PrintWriter(incoming.getOutputStream(), true);
@@ -149,7 +149,7 @@ public class CTF implements Runnable {
     public static void main(String[] args) {
         try {
             Server s = new Server(CTFKEYSTORE, CTFTRUSTSTORE, CTFPASSWORD, Settings.CTF_PORT);
-            // shared resources for all threads
+            // Shared resources for all threads
             Vector<String> authorizedVoters = new Vector<>();
             Vector<Voter> voters = new Vector<>();
             Map<Integer, Integer> votes = new HashMap<Integer, Integer>();
@@ -157,9 +157,7 @@ public class CTF implements Runnable {
             while (true) {
                 SSLSocket socket = (SSLSocket) s.getServerSocket().accept();
                 System.out.println("New client connected");
-                // For every client connection, create a new threaded instance of
-                // the CTF and make sure that it shares the same votes and voters
-                // as the rest.
+
                 CTF c = new CTF(socket);
                 c.setAuthorizedVoters(authorizedVoters);
                 c.setVoters(voters);

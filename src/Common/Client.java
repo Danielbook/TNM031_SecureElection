@@ -24,7 +24,7 @@ public class Client {
 
     private void init() {
         try {
-            // load keystores
+            // Load keystores
             KeyStore ks = KeyStore.getInstance("JCEKS");
             ks.load(new FileInputStream(keystore),
                     passphrase.toCharArray());
@@ -32,13 +32,13 @@ public class Client {
             ts.load(new FileInputStream(truststore),
                     passphrase.toCharArray());
 
-            // setup key managers
+            // Setup key managers
             KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
             kmf.init(ks, passphrase.toCharArray());
             TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
             tmf.init(ts);
 
-            // setup ssl
+            // Setup ssl
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
             SSLSocketFactory sslFact = sslContext.getSocketFactory();

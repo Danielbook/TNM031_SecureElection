@@ -7,12 +7,6 @@ public class Voter {
     private BigInteger validationNumber = BigInteger.ZERO;
     private int choice, id;
 
-    public Voter() {
-        Random r = new Random();
-        this.id = r.nextInt(1000000000);
-        this.choice = -1;
-    }
-
     public Voter(int choice, int id) {
         this.choice = choice;
         this.id = id;
@@ -36,14 +30,6 @@ public class Voter {
 
     public void setValidationNumber(BigInteger validationNumber) {
         this.validationNumber = validationNumber;
-    }
-
-    public BigInteger getValidationNumber() {
-        return validationNumber;
-    }
-
-    public void setChoice(int choice) {
-        this.choice = choice;
     }
 
     public String clientToCTF() {
@@ -70,7 +56,6 @@ public class Voter {
         Voter voter = (Voter) o;
 
         return id == voter.id;
-
     }
 
     @Override

@@ -15,9 +15,9 @@ public class ElectionClient {
     private static final String CLIENTPASSWORD   = "password";
 
     // Class variables
-    BufferedReader socketIn;
-    PrintWriter socketOut;
-    Vector<Voter> voters;
+    private BufferedReader socketIn;
+    private PrintWriter socketOut;
+    private Vector<Voter> voters;
 
     /**
      * Function to start up the client
@@ -28,7 +28,7 @@ public class ElectionClient {
     private void startClient(InetAddress host, int port) throws Exception {
         Client client = new Client(CLIENTKEYSTORE, CLIENTTRUSTSTORE, CLIENTPASSWORD, host, port);
         SSLSocket c = client.getSocket();
-        // setup transmissions
+        // Setup transmissions
         socketIn = new BufferedReader(new InputStreamReader(c.getInputStream()));
         socketOut = new PrintWriter(c.getOutputStream(), true);
     }
@@ -39,15 +39,15 @@ public class ElectionClient {
      * @throws Exception
      */
     private void validateVoters(Vector<Voter> theVoters) throws Exception {
-        // send voters to ctf
+        // Send voters to ctf
         socketOut.println(Settings.Commands.CLIENT_CTF);
         for (Voter v : theVoters) {
             socketOut.println(v.clientToCTF());
-            // receive response (validation number) from server
+            // Receive response (validation number) from server
             String resp;
             while (!(resp = socketIn.readLine()).equals(Settings.Commands.END)) {
                 // System.out.println(resp);
-                // use the server response to create our validation number
+                // Use the server response to create our validation number
                 BigInteger validationNumber = new BigInteger(resp);
                 if (!validationNumber.toString().equals("0")) {
                     v.setValidationNumber(new BigInteger(resp));
@@ -84,25 +84,25 @@ public class ElectionClient {
      * @throws Exception
      */
     public void run() throws Exception {
-        // connect to cla
+        // Connect to cla
         startClient(InetAddress.getLocalHost(), Settings.CLA_PORT);
 
-        // create and validate voters with the CLA
+        // Create and validate 10 voters with the CLA
         voters = new Vector<>();
-        for (int i = 0; i < 10; ++i) {
-            voters.add(new Voter(i % 3));
+        for (int i = 0; i < 10; i++) {
+            voters.add(new Voter(i % 2));
         }
         validateVoters(voters);
 
-        // connect to ctf
+        // Connect to ctf
         startClient(InetAddress.getLocalHost(), Settings.CTF_PORT);
 
-        // send votes
+        // Send votes
         for (Voter v : voters) {
             sendVote(v);
         }
 
-        // ask for result
+        // Get the result
         getResult();
     }
 
