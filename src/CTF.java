@@ -96,7 +96,10 @@ public class CTF implements Runnable {
      * @throws Exception
      */
     private void sendResult() throws Exception {
+        int hillaryCount = 0, trumpCount = 0;
         int total = voters.size();
+        serverOutput.println("Welcome to the presidential election!");
+        serverOutput.println("Please vote 0 for Hillary and 1 for Trump.");
         serverOutput.println("Total votes: " + total);
         // get all votes and calculate their percentage
         for (Map.Entry<Integer, Integer> v : votes.entrySet()) {
@@ -107,6 +110,13 @@ public class CTF implements Runnable {
         serverOutput.println("The voters:");
         for (Voter v : voters) {
             serverOutput.println(v.idAndVote());
+            if(v.getId() == 0) hillaryCount++;
+            else trumpCount++;
+        }
+        if(hillaryCount > trumpCount) {
+            serverOutput.println("Hillary won!");
+        } else {
+            serverOutput.println("Trump will make America great again!");
         }
         serverOutput.println(Settings.Commands.END);
     }

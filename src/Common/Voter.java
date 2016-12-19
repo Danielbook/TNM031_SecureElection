@@ -28,6 +28,14 @@ public class Voter {
         return id;
     }
 
+    public int getVote() {
+        return id;
+    }
+
+    public void changeToTrump(){
+        this.choice = 1;
+    }
+
     public void setValidationNumber(BigInteger validationNumber) {
         this.validationNumber = validationNumber;
     }

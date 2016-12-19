@@ -8,7 +8,7 @@ import Common.Client;
 import Common.Settings;
 import Common.Voter;
 
-public class ElectionClient {
+public class RiggedElectionClient {
     // Constants
     private static final String CLIENTTRUSTSTORE = Settings.KEYLOCATION + "ClientTruststore.ks";
     private static final String CLIENTKEYSTORE   = Settings.KEYLOCATION + "ClientKeystore.ks";
@@ -94,6 +94,11 @@ public class ElectionClient {
         }
         validateVoters(voters);
 
+        // Evil Putin rigs the election
+        for (Voter v : voters) {
+            v.changeToTrump();
+        }
+
         // Connect to ctf
         startClient(InetAddress.getLocalHost(), Settings.CTF_PORT);
 
@@ -104,6 +109,8 @@ public class ElectionClient {
 
         // Get the result
         getResult();
+
+
     }
 
     /**
@@ -112,7 +119,7 @@ public class ElectionClient {
      */
     public static void main(String[] args) {
         try {
-            ElectionClient c = new ElectionClient();
+            RiggedElectionClient c = new RiggedElectionClient();
             c.run();
         } catch (Exception e) {
             System.out.println(e);
